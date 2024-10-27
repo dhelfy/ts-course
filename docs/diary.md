@@ -32,7 +32,7 @@ interface CardProps {
 # 15.10.2024
 
 * Поработал с `enum`, узнал как делать типизацию через `enum`
-* Поработал с пропа под функцию
+* Поработал с типизацией пропа под функцию
 
 Пример:
 
@@ -178,6 +178,39 @@ export let EventsExample: FC = () => {
         <div>
             <input ref={inputRef} placeholder="Неуправляемый" />
             <button onClick={clickHandler}>Click</button>
+        </div>
+    )
+}
+```
+
+# 27.10.2024
+
+* Посмотрел как работает типизация `react-router-dom`
+
+Типизировать можно хук `useParams`. Нужно это чтобы иметь автокомплит для объекта параметров. Для типизации нужно использовать именно тип, а не интерфейс. Связано это с нюансами того, как `useParams` работает под капотом.
+
+```tsx
+// создаем тип для параметров
+type UserItemPageParams = {
+    id: string;
+}
+
+// типизируем параметры
+let params = useParams<UserItemPageParams>()
+```
+
+Также при вычислении свойства `isActive` у компонента `NavLink`, это свойство нужно типизировать. Делается это следующим образом. Таким образом мы явно указываем что `isActive` это булевое значение, т.к. так указывается в типе `NavLinkRenderProps`
+```tsx
+import { NavLinkRenderProps } from "react-router-dom"
+
+export let NavBar: FC = () => {
+    let active = ({isActive}: NavLinkRenderProps) => isActive ? `${styles.active_link} ${styles.link}` : styles.link
+
+    return (
+        <div className={styles.navbar}>
+            <NavLink to="/about" className={active}>About</NavLink>
+            <NavLink to="/users" className={active}>Users</NavLink>
+            <NavLink to="/todos" className={active}>Todo's</NavLink>
         </div>
     )
 }
